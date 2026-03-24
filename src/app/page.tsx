@@ -1,65 +1,187 @@
-import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Navbar } from "@/components/navbar";
+import {
+  Shirt,
+  Sparkles,
+  CalendarDays,
+  Layers,
+  ArrowRight,
+  CheckCircle2,
+} from "lucide-react";
 
-export default function Home() {
+const features = [
+  {
+    icon: Shirt,
+    title: "Digital Closet",
+    description:
+      "Upload photos of your clothes and organize them by category, season, and color. Finally see everything you own in one place.",
+  },
+  {
+    icon: Sparkles,
+    title: "AI Outfit Generator",
+    description:
+      "Get personalized outfit recommendations based on the occasion, weather, and your style preferences — using only your clothes.",
+  },
+  {
+    icon: Layers,
+    title: "Save & Organize",
+    description:
+      "Save your favorite AI-generated outfits and build a collection of go-to looks for any occasion.",
+  },
+  {
+    icon: CalendarDays,
+    title: "Outfit Calendar",
+    description:
+      "Track what you wear each day. Discover patterns, find favorites, and make sure your whole wardrobe gets love.",
+  },
+];
+
+const benefits = [
+  "Stop wearing the same 5 outfits on repeat",
+  "Get dressed in minutes, not hours",
+  "Rediscover clothes you forgot you owned",
+  "AI suggestions based on YOUR actual closet",
+  "Weather and occasion-aware recommendations",
+  "100% free to use",
+];
+
+export default function LandingPage() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="min-h-screen">
+      <Navbar />
+
+      <section className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-rose-50 via-pink-50 to-fuchsia-50" />
+        <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 sm:py-32 lg:py-40">
+          <div className="mx-auto max-w-2xl text-center">
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-gray-900">
+              Stop guessing.
+              <br />
+              <span className="text-rose-500">Start dressing.</span>
+            </h1>
+            <p className="mt-6 text-lg sm:text-xl text-gray-600 max-w-xl mx-auto">
+              Your AI-powered wardrobe assistant. Upload your clothes, get
+              personalized outfit recommendations, and never stare at your
+              closet wondering what to wear again.
+            </p>
+            <div className="mt-10 flex items-center justify-center gap-4">
+              <Link href="/signup">
+                <Button
+                  size="lg"
+                  className="bg-rose-500 hover:bg-rose-600 text-lg px-8 py-6 gap-2"
+                >
+                  Get Started Free
+                  <ArrowRight className="h-5 w-5" />
+                </Button>
+              </Link>
+              <Link href="/login">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="text-lg px-8 py-6"
+                >
+                  Sign In
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24 bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
+              Everything you need to look your best
+            </h2>
+            <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
+              Armoire combines your entire wardrobe with AI styling to make
+              getting dressed effortless.
+            </p>
+          </div>
+
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+            {features.map((feature) => (
+              <div
+                key={feature.title}
+                className="relative p-6 rounded-2xl border bg-card hover:shadow-lg transition-shadow"
+              >
+                <div className="h-12 w-12 rounded-xl bg-rose-100 flex items-center justify-center mb-4">
+                  <feature.icon className="h-6 w-6 text-rose-600" />
+                </div>
+                <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
+                <p className="text-sm text-muted-foreground">
+                  {feature.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24 bg-gray-50">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-12 lg:grid-cols-2 items-center">
+            <div>
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
+                Why Armoire?
+              </h2>
+              <p className="mt-4 text-lg text-muted-foreground">
+                Unlike other fashion apps that show you clothes you don&apos;t own,
+                Armoire works exclusively with YOUR wardrobe.
+              </p>
+              <ul className="mt-8 space-y-4">
+                {benefits.map((benefit) => (
+                  <li key={benefit} className="flex items-center gap-3">
+                    <CheckCircle2 className="h-5 w-5 text-rose-500 flex-shrink-0" />
+                    <span>{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="relative">
+              <div className="aspect-square rounded-2xl bg-gradient-to-br from-rose-100 to-pink-200 flex items-center justify-center">
+                <Shirt className="h-32 w-32 text-rose-400" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="py-24 bg-white">
+        <div className="mx-auto max-w-3xl px-4 text-center">
+          <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
+            Ready to transform your mornings?
+          </h2>
+          <p className="mt-4 text-lg text-muted-foreground">
+            Join Armoire and let AI help you make the most of your wardrobe.
+          </p>
+          <div className="mt-10">
+            <Link href="/signup">
+              <Button
+                size="lg"
+                className="bg-rose-500 hover:bg-rose-600 text-lg px-8 py-6 gap-2"
+              >
+                Create Your Free Account
+                <ArrowRight className="h-5 w-5" />
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      <footer className="border-t py-8 bg-white">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Shirt className="h-5 w-5 text-rose-500" />
+            <span className="font-semibold">Armoire</span>
+          </div>
+          <p className="text-sm text-muted-foreground">
+            Built by Tanya Patel
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+      </footer>
     </div>
   );
 }

@@ -76,7 +76,11 @@ export default function GeneratePage() {
 
     try {
       const supabase = createClient();
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) throw new Error("Not authenticated");
+
       const { error } = await supabase.from("outfits").insert({
+        user_id: userData.user.id,
         name: outfit.name,
         occasion: outfit.occasion,
         items: outfit.item_ids,

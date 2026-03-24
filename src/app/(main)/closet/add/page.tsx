@@ -58,11 +58,13 @@ export default function AddClothingPage() {
     setLoading(true);
 
     try {
+      const { data: userData } = await supabase.auth.getUser();
+      const userId = userData.user?.id;
+      if (!userId) throw new Error("Not authenticated");
+
       let imageUrl: string | null = null;
 
       if (imageFile) {
-        const { data: userData } = await supabase.auth.getUser();
-        const userId = userData.user?.id;
         const fileExt = imageFile.name.split(".").pop();
         const fileName = `${userId}/${Date.now()}.${fileExt}`;
 
@@ -80,6 +82,7 @@ export default function AddClothingPage() {
       }
 
       const { error } = await supabase.from("clothing_items").insert({
+        user_id: userId,
         name,
         category,
         color: color || null,
@@ -92,9 +95,10 @@ export default function AddClothingPage() {
 
       toast.success("Item added to your closet!");
       router.push("/closet");
-    } catch (err) {
-      toast.error("Failed to add item. Please try again.");
-      console.error(err);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Failed to add item. Please try again.";
+      toast.error(message);
+      console.error("Add item error:", err);
     } finally {
       setLoading(false);
     }

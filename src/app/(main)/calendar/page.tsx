@@ -80,7 +80,11 @@ export default function CalendarPage() {
         return;
       }
     } else {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) return;
+
       const { error } = await supabase.from("outfit_log").insert({
+        user_id: userData.user.id,
         outfit_id: selectedOutfit,
         date_worn: dateStr,
         notes: notes || null,

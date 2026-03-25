@@ -77,7 +77,7 @@ export default function ClosetPage() {
           </p>
         </div>
         <Link href="/closet/add">
-          <Button className="bg-rose-500 hover:bg-rose-600 gap-2">
+          <Button className="bg-brand hover:bg-brand-light gap-2">
             <Plus className="h-4 w-4" />
             Add Item
           </Button>
@@ -108,7 +108,7 @@ export default function ClosetPage() {
             Start by adding your first clothing item
           </p>
           <Link href="/closet/add">
-            <Button className="bg-rose-500 hover:bg-rose-600 gap-2">
+            <Button className="bg-brand hover:bg-brand-light gap-2">
               <Plus className="h-4 w-4" />
               Add Your First Item
             </Button>

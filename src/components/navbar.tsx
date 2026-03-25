@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -60,13 +61,13 @@ export function Navbar() {
     : "U";
 
   return (
-    <nav className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur-sm">
+    <nav className="sticky top-0 z-50 bg-burgundy text-white shadow-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-8">
             <Link href={user ? "/closet" : "/"} className="flex items-center gap-2">
-              <Shirt className="h-6 w-6 text-rose-500" />
-              <span className="text-xl font-bold tracking-tight">Armoire</span>
+              <Image src="/logo-v2.png" alt="Armoire" width={32} height={32} className="h-8 w-8 object-contain" />
+              <span className="text-xl font-bold tracking-tight text-white">Armoire</span>
             </Link>
 
             {user && (
@@ -75,14 +76,16 @@ export function Navbar() {
                   const isActive = pathname.startsWith(link.href);
                   return (
                     <Link key={link.href} href={link.href}>
-                      <Button
-                        variant={isActive ? "secondary" : "ghost"}
-                        size="sm"
-                        className="gap-2"
+                      <button
+                        className={`inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                          isActive
+                            ? "bg-white/20 text-white"
+                            : "text-white/70 hover:bg-white/10 hover:text-white"
+                        }`}
                       >
                         <link.icon className="h-4 w-4" />
                         {link.label}
-                      </Button>
+                      </button>
                     </Link>
                   );
                 })}
@@ -98,7 +101,7 @@ export function Navbar() {
                     className="relative h-9 w-9 rounded-full cursor-pointer focus:outline-none"
                   >
                     <Avatar className="h-9 w-9">
-                      <AvatarFallback className="bg-rose-100 text-rose-700 text-sm font-medium">
+                      <AvatarFallback className="bg-blush text-burgundy text-sm font-medium">
                         {initials}
                       </AvatarFallback>
                     </Avatar>
@@ -128,7 +131,7 @@ export function Navbar() {
                 </DropdownMenu>
 
                 <Sheet open={open} onOpenChange={setOpen}>
-                  <SheetTrigger className="md:hidden inline-flex items-center justify-center h-9 w-9 rounded-md hover:bg-accent cursor-pointer">
+                  <SheetTrigger className="md:hidden inline-flex items-center justify-center h-9 w-9 rounded-md hover:bg-white/10 cursor-pointer text-white">
                     <Menu className="h-5 w-5" />
                   </SheetTrigger>
                   <SheetContent side="right" className="w-64">
@@ -154,10 +157,14 @@ export function Navbar() {
             ) : (
               <div className="flex items-center gap-2">
                 <Link href="/login">
-                  <Button variant="ghost" size="sm">Sign In</Button>
+                  <button className="text-sm text-white/80 hover:text-white px-3 py-1.5 transition-colors">
+                    Sign In
+                  </button>
                 </Link>
                 <Link href="/signup">
-                  <Button size="sm" className="bg-rose-500 hover:bg-rose-600">Get Started</Button>
+                  <button className="text-sm bg-brand hover:bg-brand-light text-white px-4 py-1.5 rounded-md font-medium transition-colors">
+                    Get Started
+                  </button>
                 </Link>
               </div>
             )}

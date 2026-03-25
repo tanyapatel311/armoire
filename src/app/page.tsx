@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/navbar";
 import {
@@ -52,15 +53,15 @@ export default function LandingPage() {
       <Navbar />
 
       <section className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-rose-50 via-pink-50 to-fuchsia-50" />
+        <div className="absolute inset-0 bg-gradient-to-br from-mint/60 via-blush/40 to-mint/30" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-24 sm:py-32 lg:py-40">
           <div className="mx-auto max-w-2xl text-center">
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-gray-900">
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-burgundy">
               Stop guessing.
               <br />
-              <span className="text-rose-500">Start dressing.</span>
+              <span className="text-brand">Start dressing.</span>
             </h1>
-            <p className="mt-6 text-lg sm:text-xl text-gray-600 max-w-xl mx-auto">
+            <p className="mt-6 text-lg sm:text-xl text-burgundy/70 max-w-xl mx-auto">
               Your AI-powered wardrobe assistant. Upload your clothes, get
               personalized outfit recommendations, and never stare at your
               closet wondering what to wear again.
@@ -69,7 +70,7 @@ export default function LandingPage() {
               <Link href="/signup">
                 <Button
                   size="lg"
-                  className="bg-rose-500 hover:bg-rose-600 text-lg px-8 py-6 gap-2"
+                  className="bg-brand hover:bg-brand-light text-lg px-8 py-6 gap-2"
                 >
                   Get Started Free
                   <ArrowRight className="h-5 w-5" />
@@ -79,7 +80,7 @@ export default function LandingPage() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="text-lg px-8 py-6"
+                  className="text-lg px-8 py-6 border-burgundy/20 text-burgundy hover:bg-burgundy/5"
                 >
                   Sign In
                 </Button>
@@ -89,10 +90,10 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-gradient-to-b from-white to-blush/20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
+            <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-burgundy">
               Everything you need to look your best
             </h2>
             <p className="mt-4 text-lg text-muted-foreground max-w-2xl mx-auto">
@@ -105,13 +106,13 @@ export default function LandingPage() {
             {features.map((feature) => (
               <div
                 key={feature.title}
-                className="relative p-6 rounded-2xl border bg-card hover:shadow-lg transition-shadow"
+                className="relative p-6 rounded-2xl bg-blush/30 border border-blush-dark/20 hover:shadow-lg hover:bg-blush/50 transition-all"
               >
-                <div className="h-12 w-12 rounded-xl bg-rose-100 flex items-center justify-center mb-4">
-                  <feature.icon className="h-6 w-6 text-rose-600" />
+                <div className="h-12 w-12 rounded-xl bg-brand flex items-center justify-center mb-4">
+                  <feature.icon className="h-6 w-6 text-mint" />
                 </div>
-                <h3 className="font-semibold text-lg mb-2">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">
+                <h3 className="font-semibold text-lg mb-2 text-burgundy">{feature.title}</h3>
+                <p className="text-sm text-burgundy/60">
                   {feature.description}
                 </p>
               </div>
@@ -120,64 +121,61 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="py-24 bg-gray-50">
+      <section className="py-24 bg-gradient-to-b from-blush/20 to-mint/20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-12 lg:grid-cols-2 items-center">
             <div>
-              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
+              <h2 className="text-3xl sm:text-4xl font-bold tracking-tight text-burgundy">
                 Why Armoire?
               </h2>
-              <p className="mt-4 text-lg text-muted-foreground">
+              <p className="mt-4 text-lg text-burgundy/60">
                 Unlike other fashion apps that show you clothes you don&apos;t own,
                 Armoire works exclusively with YOUR wardrobe.
               </p>
               <ul className="mt-8 space-y-4">
                 {benefits.map((benefit) => (
                   <li key={benefit} className="flex items-center gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-rose-500 flex-shrink-0" />
-                    <span>{benefit}</span>
+                    <CheckCircle2 className="h-5 w-5 text-brand flex-shrink-0" />
+                    <span className="text-burgundy/80">{benefit}</span>
                   </li>
                 ))}
               </ul>
             </div>
             <div className="relative">
-              <div className="aspect-square rounded-2xl bg-gradient-to-br from-rose-100 to-pink-200 flex items-center justify-center">
-                <Shirt className="h-32 w-32 text-rose-400" />
+              <div className="aspect-square rounded-2xl bg-gradient-to-br from-mint via-blush/60 to-mint flex items-center justify-center shadow-xl">
+                <Shirt className="h-32 w-32 text-burgundy/30" />
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      <section className="py-24 bg-white">
+      <section className="py-24 bg-burgundy text-white">
         <div className="mx-auto max-w-3xl px-4 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold tracking-tight">
             Ready to transform your mornings?
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
+          <p className="mt-4 text-lg text-blush/80">
             Join Armoire and let AI help you make the most of your wardrobe.
           </p>
           <div className="mt-10">
             <Link href="/signup">
-              <Button
-                size="lg"
-                className="bg-rose-500 hover:bg-rose-600 text-lg px-8 py-6 gap-2"
-              >
+              <button className="bg-brand hover:bg-brand-light text-white text-lg px-8 py-4 rounded-lg font-medium gap-2 inline-flex items-center transition-colors">
                 Create Your Free Account
                 <ArrowRight className="h-5 w-5" />
-              </Button>
+              </button>
             </Link>
           </div>
         </div>
       </section>
 
-      <footer className="border-t py-8 bg-white">
+      <footer className="border-t border-blush-dark/20 py-8 bg-blush/20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Shirt className="h-5 w-5 text-rose-500" />
-            <span className="font-semibold">Armoire</span>
+            <Image src="/logo-v2.png" alt="Armoire" width={24} height={24} className="h-6 w-6 object-contain" />
+            <span className="font-semibold text-burgundy">Armoire</span>
           </div>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-burgundy/50">
             Built by Tanya Patel
           </p>
         </div>

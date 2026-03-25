@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import type { ClothingItem } from "@/types";
+import { parseSeasons } from "@/types";
 
 interface ClothingCardProps {
   item: ClothingItem;
@@ -14,7 +15,7 @@ interface ClothingCardProps {
 
 export function ClothingCard({ item, onDelete }: ClothingCardProps) {
   return (
-    <Card className="group overflow-hidden">
+    <Card className="group overflow-hidden bg-white shadow-sm hover:shadow-md hover:border-brand/30 transition-all">
       <div className="relative aspect-square bg-muted">
         {item.image_url ? (
           <Image
@@ -51,11 +52,11 @@ export function ClothingCard({ item, onDelete }: ClothingCardProps) {
               {item.color}
             </Badge>
           )}
-          {item.season && item.season !== "all" && (
-            <Badge variant="outline" className="text-xs capitalize">
-              {item.season}
+          {parseSeasons(item.season).map((s) => (
+            <Badge key={s} variant="outline" className="text-xs capitalize">
+              {s}
             </Badge>
-          )}
+          ))}
         </div>
       </CardContent>
     </Card>

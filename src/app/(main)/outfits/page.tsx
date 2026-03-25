@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Loader2, Trash2, Layers, Sparkles } from "lucide-react";
+import { Loader2, Trash2, Layers, Sparkles, Plus } from "lucide-react";
 import type { Outfit, ClothingItem } from "@/types";
 import { toast } from "sonner";
 import Link from "next/link";
@@ -99,12 +99,20 @@ export default function OutfitsPage() {
             {outfits.length} {outfits.length === 1 ? "outfit" : "outfits"} saved
           </p>
         </div>
-        <Link href="/generate">
-          <Button className="bg-rose-500 hover:bg-rose-600 gap-2">
-            <Sparkles className="h-4 w-4" />
-            Generate New
-          </Button>
-        </Link>
+        <div className="flex gap-2">
+          <Link href="/outfits/create">
+            <Button variant="outline" className="gap-2">
+              <Plus className="h-4 w-4" />
+              Create Outfit
+            </Button>
+          </Link>
+          <Link href="/generate">
+            <Button className="bg-brand hover:bg-brand-light gap-2">
+              <Sparkles className="h-4 w-4" />
+              Generate New
+            </Button>
+          </Link>
+        </div>
       </div>
 
       {outfits.length === 0 ? (
@@ -112,19 +120,27 @@ export default function OutfitsPage() {
           <Layers className="h-16 w-16 text-muted-foreground/40 mb-4" />
           <h2 className="text-xl font-semibold mb-2">No outfits saved yet</h2>
           <p className="text-muted-foreground mb-6">
-            Generate your first AI-powered outfit
+            Create your own outfit or let AI generate one for you
           </p>
-          <Link href="/generate">
-            <Button className="bg-rose-500 hover:bg-rose-600 gap-2">
-              <Sparkles className="h-4 w-4" />
-              Generate Outfit
-            </Button>
-          </Link>
+          <div className="flex gap-3">
+            <Link href="/outfits/create">
+              <Button variant="outline" className="gap-2">
+                <Plus className="h-4 w-4" />
+                Create Outfit
+              </Button>
+            </Link>
+            <Link href="/generate">
+              <Button className="bg-brand hover:bg-brand-light gap-2">
+                <Sparkles className="h-4 w-4" />
+                Generate with AI
+              </Button>
+            </Link>
+          </div>
         </div>
       ) : (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {outfits.map((outfit) => (
-            <Card key={outfit.id} className="group">
+            <Card key={outfit.id} className="group bg-white shadow-sm hover:shadow-md hover:border-brand/30 transition-all">
               <CardHeader className="pb-3">
                 <div className="flex items-start justify-between">
                   <div>

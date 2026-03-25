@@ -1,20 +1,48 @@
 import { NextRequest, NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
-import OpenAI from "openai";
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+async function callGemini(apiKey: string, prompt: string): Promise<string> {
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+
+  const res = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: {
+        responseMimeType: "application/json",
+        temperature: 0.8,
+      },
+    }),
+  });
+
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => null);
+    const msg = errorData?.error?.message || `Gemini API error: ${res.status}`;
+    throw new Error(msg);
+  }
+
+  const data = await res.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+}
 
 export async function POST(request: NextRequest) {
   try {
+    const apiKey = process.env.GEMINI_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json(
+        { error: "Gemini API key is not configured. Add GEMINI_API_KEY to your environment variables." },
+        { status: 500 }
+      );
+    }
+
     const supabase = await createClient();
     const {
       data: { user },
     } = await supabase.auth.getUser();
 
     if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: "Unauthorized — please log in again." }, { status: 401 });
     }
 
     const { occasion, season, notes } = await request.json();
@@ -57,16 +85,10 @@ Create ONE complete outfit using ONLY items from their wardrobe. Return your res
   "styling_tips": "One or two quick styling tips for wearing this outfit."
 }
 
-Important: Only use item IDs that exist in the wardrobe list above. Pick items that work well together in terms of color, style, and the specified occasion/season.`;
+Important: Only use item IDs that exist in the wardrobe list above. Pick items that work well together in terms of color, style, and the specified occasion/season. Return ONLY valid JSON, no markdown.`;
 
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [{ role: "user", content: prompt }],
-      response_format: { type: "json_object" },
-      temperature: 0.8,
-    });
+    const content = await callGemini(apiKey, prompt);
 
-    const content = completion.choices[0].message.content;
     if (!content) {
       return NextResponse.json(
         { error: "Failed to generate outfit" },
@@ -88,11 +110,14 @@ Important: Only use item IDs that exist in the wardrobe list above. Pick items t
       styling_tips: outfit.styling_tips,
       occasion,
     });
-  } catch (err) {
+  } catch (err: unknown) {
     console.error("Generate error:", err);
-    return NextResponse.json(
-      { error: "Failed to generate outfit. Please try again." },
-      { status: 500 }
-    );
+
+    let message = "Failed to generate outfit. Please try again.";
+    if (err instanceof Error) {
+      message = err.message;
+    }
+
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

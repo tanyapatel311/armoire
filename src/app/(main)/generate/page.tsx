@@ -100,7 +100,7 @@ export default function GeneratePage() {
     <div className="mx-auto max-w-4xl px-4 py-8">
       <div className="mb-8">
         <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
-          <Sparkles className="h-8 w-8 text-rose-500" />
+          <Sparkles className="h-8 w-8 text-brand" />
           Outfit Generator
         </h1>
         <p className="text-muted-foreground mt-1">
@@ -109,7 +109,7 @@ export default function GeneratePage() {
       </div>
 
       <div className="grid gap-8 lg:grid-cols-5">
-        <Card className="lg:col-span-2">
+        <Card className="lg:col-span-2 bg-white shadow-sm border-border">
           <CardHeader>
             <CardTitle>Preferences</CardTitle>
             <CardDescription>Tell us about the occasion</CardDescription>
@@ -159,7 +159,7 @@ export default function GeneratePage() {
 
             <Button
               onClick={handleGenerate}
-              className="w-full bg-rose-500 hover:bg-rose-600 gap-2"
+              className="w-full bg-brand hover:bg-brand-light gap-2"
               disabled={generating}
             >
               {generating ? (
@@ -174,9 +174,9 @@ export default function GeneratePage() {
 
         <div className="lg:col-span-3">
           {generating && (
-            <Card>
+            <Card className="bg-white shadow-sm border-border">
               <CardContent className="flex flex-col items-center justify-center py-16">
-                <Loader2 className="h-12 w-12 animate-spin text-rose-500 mb-4" />
+                <Loader2 className="h-12 w-12 animate-spin text-brand mb-4" />
                 <p className="text-lg font-medium">Styling your outfit...</p>
                 <p className="text-sm text-muted-foreground">
                   Our AI stylist is picking the perfect combination
@@ -186,7 +186,7 @@ export default function GeneratePage() {
           )}
 
           {outfit && !generating && (
-            <Card>
+            <Card className="bg-white shadow-sm border-border hover:border-brand/30 transition-colors">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div>
@@ -211,7 +211,7 @@ export default function GeneratePage() {
                       size="sm"
                       onClick={handleSave}
                       disabled={saving}
-                      className="gap-1 bg-rose-500 hover:bg-rose-600"
+                      className="gap-1 bg-brand hover:bg-brand-light"
                     >
                       {saving ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -274,7 +274,7 @@ export default function GeneratePage() {
           )}
 
           {!outfit && !generating && (
-            <Card>
+            <Card className="bg-white shadow-sm border-border">
               <CardContent className="flex flex-col items-center justify-center py-16 text-center">
                 <Sparkles className="h-16 w-16 text-muted-foreground/40 mb-4" />
                 <h2 className="text-xl font-semibold mb-2">

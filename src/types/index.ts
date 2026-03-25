@@ -12,7 +12,7 @@ export interface ClothingItem {
   category: ClothingCategory;
   subcategory: string | null;
   color: string | null;
-  season: Season | null;
+  season: string | null;
   image_url: string | null;
   brand: string | null;
   ai_tags: string[];
@@ -66,8 +66,12 @@ export const SEASONS: { value: Season; label: string }[] = [
   { value: "summer", label: "Summer" },
   { value: "fall", label: "Fall" },
   { value: "winter", label: "Winter" },
-  { value: "all", label: "All Seasons" },
 ];
+
+export function parseSeasons(season: string | null): Season[] {
+  if (!season || season === "all") return [];
+  return season.split(",") as Season[];
+}
 
 export const OCCASIONS = [
   "Casual",

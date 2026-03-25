@@ -49,8 +49,8 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-rose-50 to-pink-50 px-4">
-      <Card className="w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-mint/50 to-blush/50 px-4">
+      <Card className="w-full max-w-md bg-white/90 backdrop-blur-sm border-blush-dark/20 shadow-lg">
         <CardHeader className="text-center">
           <CardTitle className="text-3xl font-bold tracking-tight">
             Create your closet

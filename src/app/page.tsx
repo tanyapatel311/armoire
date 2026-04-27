@@ -147,8 +147,8 @@ export default function LandingPage() {
       <Navbar />
 
       {/* ───── Hero (sticky — covered by next section as you scroll) ───── */}
-      <div style={{ height: "180vh" }} className="snap-start">
-        <section className="sticky top-0 h-screen z-10 flex items-center justify-center overflow-hidden">
+      <div className="snap-start min-h-[180vh] sm:min-h-0 sm:h-[180vh]">
+        <section className="sticky top-0 z-10 flex min-h-screen min-h-[100dvh] w-full items-center justify-center overflow-x-hidden px-0 pt-16 pb-10 sm:pt-0 sm:pb-0 sm:min-h-0 sm:h-screen">
           <div className="absolute inset-0 z-0 bg-ivory" />
           <div className="absolute inset-0 z-0 animated-gradient" aria-hidden />
           <div
@@ -190,8 +190,8 @@ export default function LandingPage() {
             ))}
           </div>
 
-          <div className="relative z-10 mx-auto max-w-2xl text-center px-4">
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight [text-shadow:0_1px_1px_rgba(255,255,255,0.5)]">
+          <div className="relative z-10 mx-auto w-full max-w-2xl text-center px-4 sm:px-5">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight [text-shadow:0_1px_1px_rgba(255,255,255,0.5)] break-words">
               {["Stop", "guessing."].map((word, i) => (
                 <span
                   key={`line1-${i}`}
@@ -225,25 +225,25 @@ export default function LandingPage() {
             </p>
 
             <div
-              className={`mt-10 flex items-center justify-center gap-4 transition-all duration-1000 ease-out ${
+              className={`mt-8 sm:mt-10 flex w-full max-w-md sm:max-w-none mx-auto flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 transition-all duration-1000 ease-out ${
                 mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
               }`}
               style={{ transitionDelay: "1.4s" }}
             >
-              <Link href="/signup">
+              <Link href="/signup" className="w-full sm:w-auto">
                 <Button
                   size="lg"
-                  className="bg-burgundy hover:bg-burgundy-light text-lg px-8 py-6 gap-2 rounded-xl shadow-lg"
+                  className="w-full sm:w-auto bg-burgundy hover:bg-burgundy-light text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 gap-2 rounded-xl shadow-lg"
                 >
                   Get Started Free
                   <ArrowRight className="h-5 w-5" />
                 </Button>
               </Link>
-              <Link href="/closet">
+              <Link href="/closet" className="w-full sm:w-auto">
                 <Button
                   variant="outline"
                   size="lg"
-                  className="text-lg px-8 py-6 border-burgundy/20 text-burgundy hover:bg-burgundy/5 rounded-xl"
+                  className="w-full sm:w-auto text-base sm:text-lg px-6 sm:px-8 py-5 sm:py-6 border-burgundy/20 text-burgundy hover:bg-burgundy/5 rounded-xl"
                 >
                   Try Without Account
                 </Button>
@@ -253,7 +253,7 @@ export default function LandingPage() {
 
           {/* Scroll indicator */}
           <div
-            className={`absolute bottom-8 left-1/2 z-20 -translate-x-1/2 flex flex-col items-center gap-1 transition-opacity duration-1000 ${
+            className={`absolute bottom-[max(1.25rem,env(safe-area-inset-bottom,0px))] left-1/2 z-20 -translate-x-1/2 flex flex-col items-center gap-1 transition-opacity duration-1000 ${
               mounted ? "opacity-100" : "opacity-0"
             }`}
             style={{ transitionDelay: "2s" }}
@@ -360,8 +360,8 @@ export default function LandingPage() {
 
       {/* ───── Footer ───── */}
       <footer className="relative z-20 border-t border-taupe/20 py-8 bg-cream/40">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between sm:gap-0">
+          <div className="flex items-center gap-2 justify-center sm:justify-start">
             <Image
               src="/logo-v2.png"
               alt="Armoire"
@@ -371,7 +371,7 @@ export default function LandingPage() {
             />
             <span className="font-heading font-semibold text-burgundy">Armoire</span>
           </div>
-          <p className="text-sm text-taupe/70">Built by Tanya Patel</p>
+          <p className="text-sm text-taupe/70 text-center sm:text-right">Built by Tanya Patel</p>
         </div>
       </footer>
     </div>

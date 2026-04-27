@@ -6,7 +6,10 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
+  // Include "/" explicitly — a pattern that only uses "/((?!…).*)"
+  // can fail to run on the home page, so `/?code=...` is never forwarded to /auth/callback.
   matcher: [
+    "/",
     "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
   ],
 };

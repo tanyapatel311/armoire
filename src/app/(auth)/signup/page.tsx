@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
+import { getAuthCallbackUrl } from "@/lib/auth-redirect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,6 +38,8 @@ export default function SignupPage() {
       password,
       options: {
         data: { full_name: fullName },
+        // Required so the confirmation link goes to the same host you used to sign up (dev / prod / preview).
+        emailRedirectTo: getAuthCallbackUrl(),
       },
     });
 
@@ -56,7 +59,7 @@ export default function SignupPage() {
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
-      options: { redirectTo: `${location.origin}/auth/callback` },
+      options: { redirectTo: getAuthCallbackUrl() },
     });
     if (error) {
       setError(error.message);

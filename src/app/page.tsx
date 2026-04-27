@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/navbar";
+import { AuthLandingRedirect } from "@/components/auth-landing-redirect";
 import {
   Shirt,
   Sparkles,
@@ -144,6 +145,7 @@ export default function LandingPage() {
 
   return (
     <div className="min-h-screen">
+      <AuthLandingRedirect />
       <Navbar />
 
       {/* ───── Hero (sticky — covered by next section as you scroll) ───── */}

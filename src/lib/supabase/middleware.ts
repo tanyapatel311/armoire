@@ -29,7 +29,7 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  const protectedPaths = ["/closet", "/generate", "/outfits", "/calendar"];
+  const protectedPaths = ["/calendar"];
   const isProtected = protectedPaths.some((path) =>
     request.nextUrl.pathname.startsWith(path)
   );
@@ -46,7 +46,7 @@ export async function updateSession(request: NextRequest) {
       request.nextUrl.pathname === "/signup")
   ) {
     const url = request.nextUrl.clone();
-    url.pathname = "/closet";
+    url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
 

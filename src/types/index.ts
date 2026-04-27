@@ -16,6 +16,7 @@ export interface ClothingItem {
   image_url: string | null;
   brand: string | null;
   ai_tags: string[];
+  in_laundry: boolean;
   created_at: string;
 }
 
@@ -82,4 +83,32 @@ export const OCCASIONS = [
   "Workout",
   "Travel",
   "Interview",
+] as const;
+
+export const STYLES = [
+  "Casual",
+  "Boho",
+  "Chic",
+  "Streetwear",
+  "Minimalist",
+  "Preppy",
+  "Vintage",
+  "Athleisure",
+  "Glam",
+  "Classic",
+] as const;
+
+export const WEATHER_CONDITIONS = [
+  { value: "sunny", label: "Sunny" },
+  { value: "cloudy", label: "Cloudy" },
+  { value: "rainy", label: "Rainy" },
+  { value: "snowy", label: "Snowy" },
+  { value: "windy", label: "Windy" },
+  { value: "hot", label: "Hot" },
+  { value: "cold", label: "Cold" },
+] as const;
+
+export const COLORS = [
+  "Black", "White", "Gray", "Red", "Blue", "Green", "Yellow", "Orange",
+  "Pink", "Purple", "Brown", "Beige", "Navy", "Teal", "Burgundy", "Cream",
 ] as const;

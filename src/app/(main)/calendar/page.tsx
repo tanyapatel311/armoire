@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Loader2, CalendarDays, Save, Trash2 } from "lucide-react";
+import { Loader2, CalendarDays, Save, Trash2, Flame } from "lucide-react";
 import { format, parseISO } from "date-fns";
 import type { Outfit, OutfitLog, ClothingItem } from "@/types";
 import { toast } from "sonner";
@@ -167,20 +167,36 @@ export default function CalendarPage() {
     );
   }
 
+  const logsThisMonth = logs.filter((l) => {
+    const d = dateFromString(l.date_worn);
+    const now = new Date();
+    return d.getMonth() === now.getMonth() && d.getFullYear() === now.getFullYear();
+  }).length;
+
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+    <div className="mx-auto max-w-5xl px-4 py-10">
+      <div className="animate-fade-in-up mb-8">
+        <h1 className="heading-editorial text-4xl flex items-center gap-3">
           <CalendarDays className="h-8 w-8 text-brand" />
-          Outfit Calendar
+          <span className="text-gradient">Outfit Calendar</span>
         </h1>
-        <p className="text-muted-foreground mt-1">
+        <p className="text-taupe mt-2">
           Track what you wear each day
         </p>
       </div>
 
-      <div className="grid gap-8 md:grid-cols-2">
-        <Card className="bg-white shadow-sm border-border">
+      {/* Streak summary */}
+      {logsThisMonth > 0 && (
+        <div className="animate-fade-in-up mb-6 flex items-center gap-2 text-sm" style={{ animationDelay: "0.3s" }}>
+          <Flame className="h-4 w-4 text-gold" />
+          <span className="text-[#8A7E74]">
+            You&apos;ve logged <span className="font-semibold text-burgundy">{logsThisMonth}</span> {logsThisMonth === 1 ? "outfit" : "outfits"} this month
+          </span>
+        </div>
+      )}
+
+      <div className="animate-fade-in-up grid gap-8 md:grid-cols-2" style={{ animationDelay: "0.5s" }}>
+        <Card className="bg-white rounded-2xl border border-[#E8DDD0] shadow-sm">
           <CardContent className="p-6 flex justify-center">
             <Calendar
               mode="single"
@@ -188,7 +204,7 @@ export default function CalendarPage() {
               onSelect={setDate}
               modifiers={{ logged: loggedDates }}
               modifiersClassNames={{
-                logged: "bg-mint text-brand font-semibold",
+                logged: "bg-brand/20 text-brand font-semibold ring-2 ring-brand/30 rounded-full",
               }}
               className="rounded-md w-full !p-4 [--cell-size:2.75rem] [&_[data-slot=calendar]]:w-full [&_table]:w-full"
             />
@@ -196,12 +212,12 @@ export default function CalendarPage() {
         </Card>
 
         <div className="space-y-4">
-          <Card className="bg-white shadow-sm border-border">
+          <Card className="bg-white rounded-2xl border border-[#E8DDD0] shadow-sm">
             <CardHeader>
-              <CardTitle>
+              <CardTitle className="font-heading text-burgundy">
                 {date ? format(date, "EEEE, MMMM d, yyyy") : "Select a date"}
               </CardTitle>
-              <CardDescription>
+              <CardDescription className="text-taupe">
                 {selectedDateLog
                   ? "You logged an outfit for this day"
                   : "Log what you wore this day"}
@@ -209,18 +225,18 @@ export default function CalendarPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               {outfits.length === 0 ? (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-taupe">
                   Save some outfits first to start logging them here.
                 </p>
               ) : (
                 <>
                   <div className="space-y-2">
-                    <Label>Outfit</Label>
+                    <Label className="text-sm font-medium text-burgundy/80">Outfit</Label>
                     <Select
                       value={selectedOutfit}
                       onValueChange={(v) => setSelectedOutfit(v ?? "")}
                     >
-                      <SelectTrigger>
+                      <SelectTrigger className="bg-ivory border-taupe/40">
                         <SelectValue placeholder="Select an outfit" />
                       </SelectTrigger>
                       <SelectContent>
@@ -235,12 +251,13 @@ export default function CalendarPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <Label>Notes</Label>
+                    <Label className="text-sm font-medium text-burgundy/80">Notes</Label>
                     <Textarea
                       placeholder="How did this outfit feel? Any notes?"
                       value={notes}
                       onChange={(e) => setNotes(e.target.value)}
                       rows={3}
+                      className="bg-ivory border-taupe/40"
                     />
                   </div>
 
@@ -248,7 +265,7 @@ export default function CalendarPage() {
                     <Button
                       onClick={handleSaveLog}
                       disabled={saving || !selectedOutfit}
-                      className="flex-1 bg-brand hover:bg-brand-light gap-2"
+                      className="flex-1 bg-burgundy hover:bg-burgundy-light gap-2 rounded-xl"
                     >
                       {saving ? (
                         <Loader2 className="h-4 w-4 animate-spin" />
@@ -274,15 +291,15 @@ export default function CalendarPage() {
           </Card>
 
           {loggedOutfit && loggedOutfitItems.length > 0 && (
-            <Card className="bg-white shadow-sm border-border">
+            <Card className="bg-white rounded-2xl border border-[#E8DDD0] shadow-sm">
               <CardHeader className="pb-3">
-                <CardTitle className="text-base">{loggedOutfit.name}</CardTitle>
+                <CardTitle className="font-heading text-burgundy text-base">{loggedOutfit.name}</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-3 gap-2">
                   {loggedOutfitItems.map((item) => (
                     <div key={item.id} className="space-y-1">
-                      <div className="relative aspect-square bg-muted rounded-md overflow-hidden">
+                      <div className="relative aspect-square bg-muted rounded-xl overflow-hidden">
                         {item.image_url ? (
                           <Image
                             src={item.image_url}
@@ -302,7 +319,7 @@ export default function CalendarPage() {
                   ))}
                 </div>
                 {selectedDateLog?.notes && (
-                  <p className="text-sm text-muted-foreground mt-3 italic">
+                  <p className="text-sm text-taupe mt-3 italic">
                     &ldquo;{selectedDateLog.notes}&rdquo;
                   </p>
                 )}

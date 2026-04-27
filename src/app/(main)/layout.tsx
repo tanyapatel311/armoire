@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/navbar";
 import { Toaster } from "@/components/ui/sonner";
+import { GuestProvider } from "@/lib/guest-context";
 
 export default function MainLayout({
   children,
@@ -7,10 +8,20 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <GuestProvider>
       <Navbar />
-      <main className="flex-1 bg-gradient-to-br from-mint/20 via-blush/10 to-mint/10 min-h-[calc(100vh-4rem)]">{children}</main>
+      <main
+        className="flex-1 min-h-[calc(100vh-4rem)]"
+        style={{
+          backgroundImage: "url('/bg-texture.png')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
+        }}
+      >
+        {children}
+      </main>
       <Toaster position="top-right" />
-    </>
+    </GuestProvider>
   );
 }

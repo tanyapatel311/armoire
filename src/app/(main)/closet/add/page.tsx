@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
+import { useGuest } from "@/lib/guest-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -60,7 +61,17 @@ function addWhiteBackground(blob: Blob): Promise<Blob> {
   });
 }
 
+function blobToBase64(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
+  });
+}
+
 export default function AddClothingPage() {
+  const { isGuest, addGuestItem } = useGuest();
   const [name, setName] = useState("");
   const [category, setCategory] = useState<ClothingCategory | "">("");
   const [color, setColor] = useState("");
@@ -123,6 +134,33 @@ export default function AddClothingPage() {
     setLoading(true);
 
     try {
+      if (isGuest) {
+        let imageUrl: string | null = null;
+        const blobData = processedBlob || imageFile;
+        if (blobData) {
+          imageUrl = await blobToBase64(blobData);
+        }
+
+        addGuestItem({
+          id: crypto.randomUUID(),
+          user_id: "guest",
+          name,
+          category: category as ClothingCategory,
+          subcategory: null,
+          color: color || null,
+          season: seasons.length > 0 ? seasons.join(",") : "all",
+          brand: brand || null,
+          image_url: imageUrl,
+          ai_tags: [],
+          in_laundry: false,
+          created_at: new Date().toISOString(),
+        });
+
+        toast.success("Item added to your closet!");
+        router.push("/closet");
+        return;
+      }
+
       const { data: userData } = await supabase.auth.getUser();
       const userId = userData.user?.id;
       if (!userId) throw new Error("Not authenticated");
@@ -185,9 +223,9 @@ export default function AddClothingPage() {
         Back to Closet
       </Button>
 
-      <Card className="bg-white shadow-sm border-border hover:border-brand/30 transition-colors">
+      <Card className="bg-white rounded-2xl border border-[#E8DDD0] shadow-sm">
         <CardHeader>
-          <CardTitle className="text-2xl">Add New Item</CardTitle>
+          <CardTitle className="font-heading text-2xl text-burgundy">Add New Item</CardTitle>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -335,7 +373,7 @@ export default function AddClothingPage() {
 
             <Button
               type="submit"
-              className="w-full bg-brand hover:bg-brand-light gap-2"
+              className="w-full bg-burgundy hover:bg-burgundy-light gap-2 rounded-xl"
               disabled={loading || processing}
             >
               {loading ? (

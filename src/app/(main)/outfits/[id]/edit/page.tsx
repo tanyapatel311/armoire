@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,6 @@ import {
   CardTitle,
   CardDescription,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
   ArrowLeft,
   Loader2,
@@ -25,10 +24,10 @@ import {
   Shirt,
 } from "lucide-react";
 import { CATEGORIES } from "@/types";
-import type { ClothingItem } from "@/types";
+import type { ClothingItem, Outfit } from "@/types";
 import { toast } from "sonner";
 
-export default function CreateOutfitPage() {
+export default function EditOutfitPage() {
   const [name, setName] = useState("");
   const [occasion, setOccasion] = useState("");
   const [notes, setNotes] = useState("");
@@ -38,25 +37,42 @@ export default function CreateOutfitPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const router = useRouter();
+  const params = useParams();
   const supabase = createClient();
+  const outfitId = params.id as string;
 
-  const fetchItems = useCallback(async () => {
-    const { data, error } = await supabase
-      .from("clothing_items")
-      .select("*")
-      .order("created_at", { ascending: false });
+  const fetchData = useCallback(async () => {
+    const [outfitResult, itemsResult] = await Promise.all([
+      supabase.from("outfits").select("*").eq("id", outfitId).single(),
+      supabase
+        .from("clothing_items")
+        .select("*")
+        .order("created_at", { ascending: false }),
+    ]);
 
-    if (error) {
+    if (outfitResult.error || !outfitResult.data) {
+      toast.error("Outfit not found");
+      router.push("/outfits");
+      return;
+    }
+
+    if (itemsResult.error) {
       toast.error("Failed to load closet");
       return;
     }
-    setItems(data || []);
+
+    const outfit = outfitResult.data as Outfit;
+    setName(outfit.name);
+    setOccasion(outfit.occasion || "");
+    setNotes(outfit.ai_reasoning || "");
+    setSelectedIds(new Set(outfit.items));
+    setItems(itemsResult.data || []);
     setLoading(false);
-  }, [supabase]);
+  }, [supabase, outfitId, router]);
 
   useEffect(() => {
-    fetchItems();
-  }, [fetchItems]);
+    fetchData();
+  }, [fetchData]);
 
   function toggleItem(id: string) {
     setSelectedIds((prev) => {
@@ -87,23 +103,23 @@ export default function CreateOutfitPage() {
     setSaving(true);
 
     try {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) throw new Error("Not authenticated");
-
-      const { error } = await supabase.from("outfits").insert({
-        user_id: userData.user.id,
-        name: name.trim(),
-        occasion: occasion || null,
-        items: Array.from(selectedIds),
-        ai_reasoning: notes || null,
-      });
+      const { error } = await supabase
+        .from("outfits")
+        .update({
+          name: name.trim(),
+          occasion: occasion || null,
+          items: Array.from(selectedIds),
+          ai_reasoning: notes || null,
+        })
+        .eq("id", outfitId);
 
       if (error) throw error;
 
-      toast.success("Outfit created!");
-      router.push("/outfits");
+      toast.success("Outfit updated!");
+      router.push(`/outfits/${outfitId}`);
     } catch (err: unknown) {
-      const message = err instanceof Error ? err.message : "Failed to save outfit";
+      const message =
+        err instanceof Error ? err.message : "Failed to update outfit";
       toast.error(message);
     } finally {
       setSaving(false);
@@ -123,20 +139,18 @@ export default function CreateOutfitPage() {
       <Button
         variant="ghost"
         className="mb-4 gap-2"
-        onClick={() => router.back()}
+        onClick={() => router.push(`/outfits/${outfitId}`)}
       >
         <ArrowLeft className="h-4 w-4" />
-        Back to Outfits
+        Back to Outfit
       </Button>
 
       <div className="grid gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2 space-y-6">
           <div>
-            <h1 className="heading-editorial text-3xl">
-              Create an Outfit
-            </h1>
+            <h1 className="heading-editorial text-3xl">Edit Outfit</h1>
             <p className="text-taupe mt-2">
-              Pick items from your closet to build an outfit
+              Update items and details for this outfit
             </p>
           </div>
 
@@ -276,18 +290,27 @@ export default function CreateOutfitPage() {
                 />
               </div>
 
-              <Button
-                onClick={handleSave}
-                disabled={saving || selectedIds.size === 0}
-                className="w-full bg-burgundy hover:bg-burgundy-light gap-2 rounded-xl"
-              >
-                {saving ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <Save className="h-4 w-4" />
-                )}
-                {saving ? "Saving..." : "Save Outfit"}
-              </Button>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => router.push(`/outfits/${outfitId}`)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleSave}
+                  disabled={saving || selectedIds.size === 0}
+                  className="flex-1 bg-burgundy hover:bg-burgundy-light gap-2 rounded-xl"
+                >
+                  {saving ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Save className="h-4 w-4" />
+                  )}
+                  {saving ? "Saving..." : "Save Changes"}
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </div>

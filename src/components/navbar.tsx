@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter, usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,14 +15,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Menu, LogOut, User, Sparkles, Shirt, CalendarDays, Layers } from "lucide-react";
+import { Menu, LogOut, User, Sparkles, Shirt, CalendarDays, Layers, LayoutDashboard } from "lucide-react";
 import type { User as SupaUser } from "@supabase/supabase-js";
 
-const navLinks = [
-  { href: "/closet", label: "My Closet", icon: Shirt },
-  { href: "/generate", label: "Generate", icon: Sparkles },
-  { href: "/outfits", label: "Outfits", icon: Layers },
-  { href: "/calendar", label: "Calendar", icon: CalendarDays },
+const allNavLinks = [
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, guestVisible: true },
+  { href: "/closet", label: "My Closet", icon: Shirt, guestVisible: true },
+  { href: "/generate", label: "Generate", icon: Sparkles, guestVisible: true },
+  { href: "/outfits", label: "Outfits", icon: Layers, guestVisible: true },
+  { href: "/calendar", label: "Calendar", icon: CalendarDays, guestVisible: false },
 ];
 
 export function Navbar() {
@@ -60,27 +61,35 @@ export function Navbar() {
         .toUpperCase()
     : "U";
 
+  const isOnAppPage = allNavLinks.some((l) => pathname.startsWith(l.href));
+  const isGuest = !user && isOnAppPage;
+
+  const visibleLinks = useMemo(
+    () => (user ? allNavLinks : allNavLinks.filter((l) => l.guestVisible)),
+    [user]
+  );
+
   return (
     <nav className="sticky top-0 z-50 bg-burgundy text-white shadow-md">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
+        <div className="flex h-14 items-center justify-between">
           <div className="flex items-center gap-8">
-            <Link href={user ? "/closet" : "/"} className="flex items-center gap-2">
+            <Link href={user ? "/dashboard" : "/"} className="flex items-center gap-2">
               <Image src="/logo-v2.png" alt="Armoire" width={32} height={32} className="h-8 w-8 object-contain" />
-              <span className="text-xl font-bold tracking-tight text-white">Armoire</span>
+              <span className="font-heading text-xl font-bold tracking-wide text-white">Armoire</span>
             </Link>
 
-            {user && (
+            {(user || isGuest) && (
               <div className="hidden md:flex items-center gap-1">
-                {navLinks.map((link) => {
+                {visibleLinks.map((link) => {
                   const isActive = pathname.startsWith(link.href);
                   return (
                     <Link key={link.href} href={link.href}>
                       <button
-                        className={`inline-flex items-center gap-2 rounded-md px-3 py-1.5 text-sm font-medium transition-colors ${
+                        className={`inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-sm font-medium transition-all duration-300 ${
                           isActive
-                            ? "bg-white/20 text-white"
-                            : "text-white/70 hover:bg-white/10 hover:text-white"
+                            ? "bg-white/15 text-white"
+                            : "text-white/60 hover:text-white hover:bg-white/8"
                         }`}
                       >
                         <link.icon className="h-4 w-4" />
@@ -101,7 +110,7 @@ export function Navbar() {
                     className="relative h-9 w-9 rounded-full cursor-pointer focus:outline-none"
                   >
                     <Avatar className="h-9 w-9">
-                      <AvatarFallback className="bg-blush text-burgundy text-sm font-medium">
+                      <AvatarFallback className="bg-gold/20 text-gold text-sm font-medium">
                         {initials}
                       </AvatarFallback>
                     </Avatar>
@@ -134,19 +143,22 @@ export function Navbar() {
                   <SheetTrigger className="md:hidden inline-flex items-center justify-center h-9 w-9 rounded-md hover:bg-white/10 cursor-pointer text-white">
                     <Menu className="h-5 w-5" />
                   </SheetTrigger>
-                  <SheetContent side="right" className="w-64">
+                  <SheetContent side="right" className="w-64 bg-burgundy border-burgundy-light/30">
                     <div className="flex flex-col gap-2 mt-8">
-                      {navLinks.map((link) => {
+                      {visibleLinks.map((link) => {
                         const isActive = pathname.startsWith(link.href);
                         return (
                           <Link key={link.href} href={link.href} onClick={() => setOpen(false)}>
-                            <Button
-                              variant={isActive ? "secondary" : "ghost"}
-                              className="w-full justify-start gap-2"
+                            <button
+                              className={`w-full flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 ${
+                                isActive
+                                  ? "bg-white/15 text-white"
+                                  : "text-white/60 hover:text-white hover:bg-white/8"
+                              }`}
                             >
                               <link.icon className="h-4 w-4" />
                               {link.label}
-                            </Button>
+                            </button>
                           </Link>
                         );
                       })}
@@ -156,16 +168,50 @@ export function Navbar() {
               </>
             ) : (
               <div className="flex items-center gap-2">
+                {isGuest && (
+                  <span className="hidden sm:inline text-xs bg-white/10 text-white/70 px-2.5 py-1 rounded-full mr-1">
+                    Guest
+                  </span>
+                )}
                 <Link href="/login">
-                  <button className="text-sm text-white/80 hover:text-white px-3 py-1.5 transition-colors">
+                  <button className="text-sm text-white/80 hover:text-white px-3 py-1.5 transition-all duration-300">
                     Sign In
                   </button>
                 </Link>
                 <Link href="/signup">
-                  <button className="text-sm bg-brand hover:bg-brand-light text-white px-4 py-1.5 rounded-md font-medium transition-colors">
+                  <button className="hidden sm:inline text-sm bg-brand hover:bg-brand-light text-white px-5 py-1.5 rounded-full font-medium transition-all duration-300 shadow-sm">
                     Get Started
                   </button>
                 </Link>
+
+                {isGuest && (
+                  <Sheet open={open} onOpenChange={setOpen}>
+                    <SheetTrigger className="md:hidden inline-flex items-center justify-center h-9 w-9 rounded-md hover:bg-white/10 cursor-pointer text-white">
+                      <Menu className="h-5 w-5" />
+                    </SheetTrigger>
+                    <SheetContent side="right" className="w-64 bg-burgundy border-burgundy-light/30">
+                      <div className="flex flex-col gap-2 mt-8">
+                        {visibleLinks.map((link) => {
+                          const isActive = pathname.startsWith(link.href);
+                          return (
+                            <Link key={link.href} href={link.href} onClick={() => setOpen(false)}>
+                              <button
+                                className={`w-full flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-all duration-300 ${
+                                  isActive
+                                    ? "bg-white/15 text-white"
+                                    : "text-white/60 hover:text-white hover:bg-white/8"
+                                }`}
+                              >
+                                <link.icon className="h-4 w-4" />
+                                {link.label}
+                              </button>
+                            </Link>
+                          );
+                        })}
+                      </div>
+                    </SheetContent>
+                  </Sheet>
+                )}
               </div>
             )}
           </div>

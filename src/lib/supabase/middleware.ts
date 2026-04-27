@@ -2,6 +2,14 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
 export async function updateSession(request: NextRequest) {
+  // Email confirmation and some OAuth settings use the Supabase "Site URL" (often `/`)
+  // and append `?code=...`. Only `/auth/callback` runs `exchangeCodeForSession`, so forward there.
+  if (request.nextUrl.pathname === "/" && request.nextUrl.searchParams.get("code")) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/auth/callback";
+    return NextResponse.redirect(url);
+  }
+
   let supabaseResponse = NextResponse.next({ request });
 
   const supabase = createServerClient(
